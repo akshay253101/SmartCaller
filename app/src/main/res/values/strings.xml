@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SmartCaller</string>
+
+    <!-- General-->
+    <string name="general_key_okay">Okay</string>
+    <string name="general_key_cancel">Cancel</string>
+
+    <!-- Permissions-->
+    <string name="permission_denied_for_read_logs">We need these permissions to block appropriate calls filtered by you.</string>
 </resources>
