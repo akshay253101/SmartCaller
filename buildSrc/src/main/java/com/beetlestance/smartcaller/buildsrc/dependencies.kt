@@ -11,7 +11,7 @@ object SmartCaller {
 
 object Libs {
 
-    const val androidGradlePlugin: String = "com.android.tools.build:gradle:4.1.1"
+    const val androidGradlePlugin: String = "com.android.tools.build:gradle:4.1.2"
 
     object Test {
         const val junit: String = "junit:junit:4.13.1"
