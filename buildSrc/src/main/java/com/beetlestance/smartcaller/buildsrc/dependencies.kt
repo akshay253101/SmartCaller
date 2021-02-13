@@ -83,7 +83,7 @@ object Libs {
     }
 
     object Dagger {
-        private const val version = "2.30.1"
+        private const val version = "2.32"
         const val dagger: String = "com.google.dagger:dagger:$version"
         const val compiler: String = "com.google.dagger:dagger-compiler:$version"
         const val processor = "com.google.dagger:dagger-android-processor:$version"
@@ -91,7 +91,7 @@ object Libs {
     }
 
     object Kotlin {
-        const val version: String = "1.4.21"
+        const val version: String = "1.4.30"
         const val stdlib: String = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         const val gradlePlugin: String = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
     }

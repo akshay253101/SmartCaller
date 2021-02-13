@@ -25,7 +25,6 @@ subprojects {
                 "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-Xopt-in=kotlinx.coroutines.FlowPreview",
                 "-Xopt-in=kotlin.Experimental",
-                "-Xallow-jvm-ir-dependencies",
                 "-Xjvm-default=all"
             )
 

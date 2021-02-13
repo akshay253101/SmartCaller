@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "266812208750",
+    "project_id": "smartcaller-47632",
+    "storage_bucket": "smartcaller-47632.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266812208750:android:b39e8cbbc58dd20a57d87f",
+        "android_client_info": {
+          "package_name": "com.beetlestance.smartcaller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266812208750-h3o718pf6he0fgvb0cl3nbh4umghj7nq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbD673XnnFvRTxjXGe4phwuoumBioX6xg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266812208750-h3o718pf6he0fgvb0cl3nbh4umghj7nq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
