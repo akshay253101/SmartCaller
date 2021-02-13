@@ -3,6 +3,7 @@
     package="com.beetlestance.smartcaller">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
     <application
         android:name=".SmartCallerApplication"
@@ -13,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCaller">
 
-        <activity android:name=".ui.MainActivity">
+        <activity
+            android:name=".ui.MainActivity"
+            android:theme="@style/Theme.SmartCaller">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
