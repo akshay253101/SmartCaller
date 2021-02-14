@@ -9,7 +9,6 @@ import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.util.Xml
 import androidx.annotation.MenuRes
-import androidx.core.content.ContextCompat
 import com.ismaeldivita.chipnavigation.R
 import com.ismaeldivita.chipnavigation.util.getValueFromAttr
 import org.xmlpull.v1.XmlPullParser.*
@@ -101,7 +100,7 @@ internal class MenuParser(private val context: Context) {
 
     private fun readIconActiveColor(sAttr: TypedArray): Int = sAttr.getColor(
         R.styleable.ChipMenuItem_cnb_iconColor,
-        context.getValueFromAttr(R.attr.colorAccent)
+        context.getValueFromAttr(androidx.appcompat.R.attr.colorAccent)
     )
 
     private fun readTextActiveColor(sAttr: TypedArray): Int =

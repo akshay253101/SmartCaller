@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.beetlestance.smartcaller.R
 import com.beetlestance.smartcaller.constants.SmartCallerRequiredPermissions
+import com.beetlestance.smartcaller.databinding.ActivityMainBinding
 import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import com.beetlestance.smartcaller.di.viewmodelfactory.ViewModelFactory
 import com.beetlestance.smartcaller.utils.callmanager.CallStateListener
@@ -35,6 +36,7 @@ class MainActivity : DaggerAppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ActivityMainBinding.inflate(layoutInflater)
         checkPermission()
         addObserver()
     }
