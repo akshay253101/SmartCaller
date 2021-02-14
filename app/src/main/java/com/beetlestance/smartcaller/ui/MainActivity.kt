@@ -1,77 +1,88 @@
 package com.beetlestance.smartcaller.ui
 
-import android.Manifest
 import android.content.Intent
-import android.net.Uri
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.Settings
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.beetlestance.smartcaller.R
-import com.beetlestance.smartcaller.utils.PhoneStateReceiver
-import com.beetlestance.smartcaller.utils.hasPermissions
-import com.beetlestance.smartcaller.utils.shouldShowPermissionRationale
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.beetlestance.smartcaller.constants.SmartCallerRequiredPermissions
+import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
+import com.beetlestance.smartcaller.di.viewmodelfactory.ViewModelFactory
+import com.beetlestance.smartcaller.utils.callmanager.CallStateListener
+import com.beetlestance.smartcaller.utils.extensions.requestRequiredPermissions
+import com.beetlestance.smartcaller.utils.extensions.showPermissionDeniedDialog
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(R.layout.activity_main) {
 
     @Inject
-    lateinit var phoneStateReceiver: PhoneStateReceiver
+    lateinit var callStateListener: CallStateListener
 
-    private val requestReadLogPermissionLauncher =
-        registerForActivityResult(RequestPermission()) { isGranted ->
-            if (isGranted.not()) checkPermission()
-        }
+    @Inject
+    lateinit var dispatchers: AppCoroutineDispatchers
 
-    private val startActivityForResult =
-        registerForActivityResult(StartActivityForResult()) {}
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel: MainActivityViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        addObserver()
         checkPermission()
+        addObserver()
     }
 
     private fun addObserver() {
-        phoneStateReceiver.callState.observe(this) {
-            Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+        lifecycleScope.launch(dispatchers.main) {
+            callStateListener.callState.collect { state ->
+                Toast.makeText(this@MainActivity, state.name, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
     private fun checkPermission() {
-        when {
-            hasPermissions(READ_CALL_LOGS_PERMISSION) -> Unit
-            shouldShowPermissionRationale(READ_CALL_LOGS_PERMISSION) -> {
-                showReadLogsPermissionDeniedDialog()
-            }
-            else -> requestReadLogPermissionLauncher.launch(READ_CALL_LOGS_PERMISSION)
+        requestRequiredPermissions(
+            permissions = SmartCallerRequiredPermissions.permissions,
+            requestCode = SmartCallerRequiredPermissions.REQUEST_CODE
+        )
+    }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != SmartCallerRequiredPermissions.REQUEST_CODE) return
+
+        permissions@ for (index in permissions.indices) {
+            if (grantResults[index] == PackageManager.PERMISSION_DENIED) {
+                handlePermissionDenial()
+                break@permissions
+            }
         }
     }
 
-    private fun showReadLogsPermissionDeniedDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setMessage(getString(R.string.permission_denied_for_read_logs))
-            .setPositiveButton(getString(R.string.general_key_okay)) { dialog, _ ->
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri: Uri = Uri.fromParts("package", packageName, null)
-                intent.data = uri
-                startActivityForResult.launch(intent)
-                dialog.dismiss()
+    private fun handlePermissionDenial() {
+        showPermissionDeniedDialog(description = R.string.permission_denied,
+            onPositiveResponse = { settingsIntent ->
+                startActivityForResult.launch(settingsIntent)
+            },
+            onNegativeResponse = {
+                finish()
             }
-            .setNegativeButton(getString(R.string.general_key_cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
+        )
     }
 
-
-    companion object {
-        const val READ_CALL_LOGS_PERMISSION = Manifest.permission.READ_CALL_LOG
+    private val startActivityForResult: ActivityResultLauncher<Intent> by lazy {
+        registerForActivityResult(StartActivityForResult()) {}
     }
 
 }

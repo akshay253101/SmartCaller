@@ -1,22 +1,28 @@
-package com.beetlestance.smartcaller.utils
+package com.beetlestance.smartcaller.utils.callmanager
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Context.TELEPHONY_SERVICE
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.beetlestance.smartcaller.di.ApplicationContext
+import com.beetlestance.smartcaller.utils.validNumberOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PhoneStateReceiver @Inject constructor(
-    @ApplicationContext private val context: Context
+class CallStateListener @Inject constructor(
+    @ApplicationContext private val applicationContext: Context
 ) : PhoneStateListener() {
 
-    private val _callState: MutableLiveData<CallState> = MutableLiveData(CallState.IDLE)
-    val callState: LiveData<CallState> = _callState
+    private val _callState: MutableStateFlow<CallState?> = MutableStateFlow(CallState.IDLE)
+    val callState: Flow<CallState> = _callState.filterNotNull().distinctUntilChanged()
+
+    private var inComingCallReceived: OnInComingCallReceived? = null
 
     init {
         registerCallback()
@@ -24,14 +30,28 @@ class PhoneStateReceiver @Inject constructor(
 
     @SuppressLint("MissingPermission")
     private fun registerCallback() {
-        val telephony = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val telephony = applicationContext.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+        _callState.value = telephonyStateToCallState(telephony.callState)
         telephony.listen(this, LISTEN_CALL_STATE)
     }
 
+    fun attachListener(listener: OnInComingCallReceived? = null) {
+        inComingCallReceived = listener
+    }
+
     override fun onCallStateChanged(state: Int, phoneNumber: String?) {
+        val number = phoneNumber?.validNumberOrNull()
         validateAndResetState()
 
-        val newState = when (state) {
+        val newState = telephonyStateToCallState(state)
+        if (number != null && newState == CallState.INCOMING_CALL_RECEIVED) {
+            inComingCallReceived?.onCallReceived(number)
+        }
+        _callState.value = newState
+    }
+
+    private fun telephonyStateToCallState(state: Int): CallState {
+        return when (state) {
             TelephonyManager.CALL_STATE_RINGING -> CallState.INCOMING_CALL_RECEIVED
             TelephonyManager.CALL_STATE_OFFHOOK -> {
                 if (isAtLeast(CallState.INCOMING_CALL_RECEIVED)) CallState.INCOMING_CALL_PICKED
@@ -46,7 +66,6 @@ class PhoneStateReceiver @Inject constructor(
                 }
             else -> throw IllegalStateException("Unknown call state - $state")
         }
-        _callState.value = newState
     }
 
     private fun validateAndResetState() {
@@ -61,7 +80,12 @@ class PhoneStateReceiver @Inject constructor(
         return currentState >= state
     }
 
-    enum class CallState {
+    interface OnInComingCallReceived {
+
+        fun onCallReceived(number: String)
+    }
+
+    enum class CallState() {
         IDLE,
         OUTGOING_CALL_STARTED,
         OUTGOING_CALL_ENDED,

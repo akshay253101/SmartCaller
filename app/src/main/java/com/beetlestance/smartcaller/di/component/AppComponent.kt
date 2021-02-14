@@ -1,8 +1,10 @@
 package com.beetlestance.smartcaller.di.component
 
 import com.beetlestance.smartcaller.SmartCallerApplication
+import com.beetlestance.smartcaller.data.repository.di.RepositoryModule
 import com.beetlestance.smartcaller.di.modules.ActivityModule
 import com.beetlestance.smartcaller.di.modules.ApplicationModule
+import com.beetlestance.smartcaller.utils.receivers.BroadcastModule
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
@@ -17,7 +19,9 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         ActivityModule::class,
-        ApplicationModule::class
+        ApplicationModule::class,
+        RepositoryModule::class,
+        BroadcastModule::class
     ]
 )
 interface AppComponent : AndroidInjector<SmartCallerApplication> {
