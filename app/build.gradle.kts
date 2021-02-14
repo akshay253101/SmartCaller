@@ -76,6 +76,9 @@ android {
 
 dependencies {
 
+    // Projects
+    implementation(project(":chip-navigation-bar"))
+    
     // Testing
     testImplementation(Libs.Test.junit)
     androidTestImplementation(Libs.AndroidX.Test.junit)

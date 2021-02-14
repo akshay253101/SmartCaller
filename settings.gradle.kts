@@ -1,6 +1,6 @@
 rootProject.name = "SmartCaller"
 
-include(":app")
+include(":app", ":chip-navigation-bar")
 
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
