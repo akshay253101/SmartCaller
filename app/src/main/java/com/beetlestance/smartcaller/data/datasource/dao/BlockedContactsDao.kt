@@ -1,6 +1,5 @@
 package com.beetlestance.smartcaller.data.datasource.dao
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -15,8 +14,9 @@ abstract class BlockedContactsDao : EntityDao<BlockedContact>() {
     @Query(value = ALL_CONTACTS)
     abstract fun contactsObservable(): Flow<List<BlockedContact>>
 
-    @Query(value = "SELECT * FROM ${AppTables.BLOCKED_CONTACTS_TABLE} WHERE name LIKE :query")
-    abstract fun pagingSource(query: String): PagingSource<Int, BlockedContact>
+    @Transaction
+    @Query(value = "SELECT * FROM ${AppTables.BLOCKED_CONTACTS_TABLE} WHERE contact_id LIKE :contactId AND number LIKE :number")
+    abstract fun findContacts(contactId: Int, number: String): List<BlockedContact>
 
     companion object {
         private const val ALL_CONTACTS = "SELECT * FROM ${AppTables.BLOCKED_CONTACTS_TABLE}"

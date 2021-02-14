@@ -23,6 +23,9 @@ abstract class EntityDao<in E : SmartCallerEntity> {
     @Delete
     abstract suspend fun deleteEntity(entity: E): Int
 
+    @Delete
+    abstract suspend fun deleteEntity(entity: List<E>): Int
+
     @Transaction
     open suspend fun withTransaction(tx: suspend () -> Unit): Unit = tx()
 

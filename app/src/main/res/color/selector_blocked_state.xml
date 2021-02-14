@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ @author Akshay Yadav
+  ~
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Color when the row is selected -->
+    <item android:color="@color/blocked_contacts_chip_color" android:state_checked="true" />
+    <!-- Standard background color -->
+    <item android:color="@color/unblocked_contacts_chip_color" />
+</selector>

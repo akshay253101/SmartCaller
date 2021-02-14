@@ -5,11 +5,12 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.beetlestance.smartcaller.R
+import com.beetlestance.smartcaller.data.states.Contact
 import com.beetlestance.smartcaller.databinding.ItemViewContactBinding
-import com.beetlestance.smartcaller.utils.ContactsDataSource.Contact
+import com.beetlestance.smartcaller.ui.contacts.ContactsViewModel
 import com.beetlestance.smartcaller.utils.bindWithLayout
 
-class ContactsAdapter :
+class ContactsAdapter(private val viewModel: ContactsViewModel) :
     PagingDataAdapter<Contact, ContactsAdapter.ContactViewHolder>(DiffCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -19,6 +20,7 @@ class ContactsAdapter :
     override fun onBindViewHolder(holderContact: ContactViewHolder, position: Int) {
         holderContact.binding.apply {
             contact = getItem(position)
+            contactsViewModel = viewModel
             executePendingBindings()
         }
     }

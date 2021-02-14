@@ -42,7 +42,7 @@ class ContactsFragment :
     }
 
     private fun initRecyclerView() {
-        contactsAdapter = ContactsAdapter()
+        contactsAdapter = ContactsAdapter(viewModel)
         requireBinding().fragmentContactsRecyclerView.adapter = contactsAdapter
     }
 

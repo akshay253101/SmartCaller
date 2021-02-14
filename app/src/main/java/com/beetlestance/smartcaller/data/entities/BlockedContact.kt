@@ -12,15 +12,11 @@ data class BlockedContact(
     @ColumnInfo(name = "id")
     override val id: Long = 0,
 
-    @ColumnInfo(name = "index") val index: String,
-
     @ColumnInfo(name = "name") val name: String,
-
-    @ColumnInfo(name = "uri") val uri: String,
 
     @ColumnInfo(name = "number") val number: String,
 
-    @ColumnInfo(name = "isBlocked") val isBlocked: Boolean,
+    @ColumnInfo(name = "contact_id") val contactId: Int,
 
     @ColumnInfo(name = "blockedOn") val blockedOn: Long
 

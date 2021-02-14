@@ -1,13 +1,11 @@
 package com.beetlestance.smartcaller.domain.observers
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
+import androidx.paging.*
 import com.beetlestance.smartcaller.data.repository.ContactsRepository
+import com.beetlestance.smartcaller.data.states.Contact
 import com.beetlestance.smartcaller.domain.PagingUseCase
-import com.beetlestance.smartcaller.utils.ContactsDataSource.Contact
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class ObserveContacts @Inject constructor(
@@ -19,7 +17,18 @@ class ObserveContacts @Inject constructor(
         return Pager(
             config = params.pagingConfig,
             pagingSourceFactory = { contactsRepository.contactsPageSource() }
-        ).flow
+        ).flow.combine(contactsRepository.observeBlockedContacts()) { pagingData, blockedContacts ->
+
+            pagingData.map { contact ->
+                val blockedContact = blockedContacts.find { blockedContact ->
+                    blockedContact.contactId == contact.id && blockedContact.number == contact.number
+                }
+                contact.copy(
+                    isBlocked = blockedContact != null,
+                    blockedOn = blockedContact?.blockedOn
+                )
+            }
+        }
     }
 
     data class Params(

@@ -5,13 +5,14 @@ import android.database.Cursor
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.util.Log
 import androidx.paging.PagingSource
+import com.beetlestance.smartcaller.data.states.Contact
 import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import kotlinx.coroutines.withContext
 
 class ContactsDataSource(
     private val contentResolver: ContentResolver,
     private val dispatcher: AppCoroutineDispatchers
-) : PagingSource<Int, ContactsDataSource.Contact>() {
+) : PagingSource<Int, Contact>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Contact> {
         val data = mapQueryToContacts(params.loadSize, params.key)
@@ -74,7 +75,9 @@ class ContactsDataSource(
                         val lookupKey: String = getString(getColumnIndex(Phone.LOOKUP_KEY))
                         val number: String = getString(getColumnIndex(Phone.NUMBER))
                         val name: String = getString(getColumnIndex(Phone.DISPLAY_NAME))
-                        contacts.add(Contact(id, name, number, lookupKey))
+                        contacts.add(
+                            Contact(id = id, name = name, number = number, lookUpKey = lookupKey)
+                        )
                         moveToNext()
                     }
                     close()
@@ -88,12 +91,5 @@ class ContactsDataSource(
             contacts.toList()
         }
     }
-
-    data class Contact(
-        val id: Int,
-        val name: String,
-        val number: String,
-        val lookUpKey: String
-    )
 
 }

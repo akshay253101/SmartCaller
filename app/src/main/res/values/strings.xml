@@ -4,6 +4,8 @@
     <!-- General-->
     <string name="general_key_okay">Okay</string>
     <string name="general_key_cancel">Cancel</string>
+    <string name="general_block">Block</string>
+    <string name="general_unblock">Unblock</string>
 
     <!-- Permissions-->
     <string name="permission_denied">We need these permissions to block appropriate calls filtered by you.</string>
@@ -12,6 +14,8 @@
     <string name="dashboard_item_blocked">Blocked</string>
     <string name="dashboard_item_call_logs">Call Logs</string>
     <string name="dashboard_item_contacts">Contacts</string>
+
+    <!-- Contacts-->
     <string name="contacts_title">Contacts</string>
     <string name="contacts_search_hint">Search Here</string>
 </resources>
