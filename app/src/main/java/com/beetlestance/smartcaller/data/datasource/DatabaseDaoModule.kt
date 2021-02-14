@@ -9,6 +9,6 @@ class DatabaseDaoModule {
 
     @Provides
     @Singleton
-    fun provideContactsDao(db: AppDatabase) = db.contactsDao()
+    fun provideBlockedContactsDao(db: AppDatabase) = db.blockedContactsDao()
 
 }

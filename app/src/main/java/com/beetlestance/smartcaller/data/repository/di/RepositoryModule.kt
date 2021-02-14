@@ -1,7 +1,7 @@
 package com.beetlestance.smartcaller.data.repository.di
 
-import com.beetlestance.smartcaller.data.repository.ContactsRepo
-import com.beetlestance.smartcaller.data.repository.ContactsRepoImpl
+import com.beetlestance.smartcaller.data.repository.ContactsRepository
+import com.beetlestance.smartcaller.data.repository.ContactsRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -10,11 +10,11 @@ import javax.inject.Singleton
 class RepositoryModule {
 
     /**
-     *  @provides [ContactsRepo]
+     *  @provides [ContactsRepository]
      */
     @Provides
     @Singleton
     fun provideContactsRepository(
-        contactsRepoImpl: ContactsRepoImpl
-    ): ContactsRepo = contactsRepoImpl
+        contactsRepoImpl: ContactsRepositoryImpl
+    ): ContactsRepository = contactsRepoImpl
 }

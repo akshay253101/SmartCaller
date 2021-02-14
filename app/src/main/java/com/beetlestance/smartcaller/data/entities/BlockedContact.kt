@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.beetlestance.smartcaller.data.datasource.AppTables
 
-@Entity(tableName = AppTables.CONTACTS_TABLE)
-data class Contact(
+@Entity(tableName = AppTables.BLOCKED_CONTACTS_TABLE)
+data class BlockedContact(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
