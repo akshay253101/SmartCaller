@@ -14,7 +14,6 @@ import com.beetlestance.smartcaller.ui.contacts.adapter.ContactsAdapter
 import com.beetlestance.smartcaller.utils.extensions.hasPermissions
 import com.beetlestance.smartcaller.utils.extensions.showPermissionDeniedDialog
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ContactsFragment :
@@ -47,12 +46,11 @@ class ContactsFragment :
     }
 
     private fun addObserver() {
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenResumed {
             viewModel.contactsPagedData.collect {
                 contactsAdapter?.submitData(it)
             }
         }
-
     }
 
     private fun checkPermission() {

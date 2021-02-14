@@ -5,18 +5,23 @@ import android.database.Cursor
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.util.Log
 import androidx.paging.PagingSource
+import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
+import kotlinx.coroutines.withContext
 
 class ContactsDataSource(
-    private val contentResolver: ContentResolver
+    private val contentResolver: ContentResolver,
+    private val dispatcher: AppCoroutineDispatchers
 ) : PagingSource<Int, ContactsDataSource.Contact>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Contact> {
         val data = mapQueryToContacts(params.loadSize, params.key)
-        return LoadResult.Page(
-            data = data,
-            prevKey = guessPrevKey(params, data),
-            nextKey = guessNextKey(params, data)
-        )
+        return withContext(dispatcher.io) {
+            LoadResult.Page(
+                data = data,
+                prevKey = guessPrevKey(params, data),
+                nextKey = guessNextKey(params, data)
+            )
+        }
     }
 
 
@@ -36,49 +41,51 @@ class ContactsDataSource(
         }
     }
 
-    private fun mapQueryToContacts(pageSize: Int, key: Int?): List<Contact> {
-        val contacts = mutableListOf<Contact>()
-        var cursor: Cursor? = null
-        try {
+    private suspend fun mapQueryToContacts(pageSize: Int, key: Int?): List<Contact> {
+        return withContext(dispatcher.io) {
+            val contacts = mutableListOf<Contact>()
+            var cursor: Cursor? = null
+            try {
 
-            var sort = Phone.DISPLAY_NAME + " ASC LIMIT " + pageSize
-            if (key != null) sort = "$sort OFFSET $key"
+                var sort = Phone.DISPLAY_NAME + " ASC LIMIT " + pageSize
+                if (key != null) sort = "$sort OFFSET $key"
 
-            cursor = contentResolver.query(
-                Phone.CONTENT_URI,
-                arrayOf(
-                    Phone.CONTACT_ID,
-                    Phone.LOOKUP_KEY,
-                    Phone.NUMBER,
-                    Phone.DISPLAY_NAME
-                ),
-                null,
-                null,
-                sort
-            )
+                cursor = contentResolver.query(
+                    Phone.CONTENT_URI,
+                    arrayOf(
+                        Phone.CONTACT_ID,
+                        Phone.LOOKUP_KEY,
+                        Phone.NUMBER,
+                        Phone.DISPLAY_NAME
+                    ),
+                    null,
+                    null,
+                    sort
+                )
 
-            registerInvalidatedCallback {
-                cursor?.close()
-            }
-
-            cursor?.apply {
-                moveToFirst()
-                while (!isAfterLast) {
-                    val id: Int = getInt(getColumnIndex(Phone.CONTACT_ID))
-                    val lookupKey: String = getString(getColumnIndex(Phone.LOOKUP_KEY))
-                    val number: String = getString(getColumnIndex(Phone.NUMBER))
-                    val name: String = getString(getColumnIndex(Phone.DISPLAY_NAME))
-                    contacts.add(Contact(id, name, number, lookupKey))
-                    moveToNext()
+                registerInvalidatedCallback {
+                    cursor?.close()
                 }
-                close()
+
+                cursor?.apply {
+                    moveToFirst()
+                    while (!isAfterLast) {
+                        val id: Int = getInt(getColumnIndex(Phone.CONTACT_ID))
+                        val lookupKey: String = getString(getColumnIndex(Phone.LOOKUP_KEY))
+                        val number: String = getString(getColumnIndex(Phone.NUMBER))
+                        val name: String = getString(getColumnIndex(Phone.DISPLAY_NAME))
+                        contacts.add(Contact(id, name, number, lookupKey))
+                        moveToNext()
+                    }
+                    close()
+                }
+
+            } catch (e: Exception) {
+                Log.e(javaClass.simpleName, e.message, e.cause)
             }
 
-        } catch (e: Exception) {
-            Log.e(javaClass.simpleName, e.message, e.cause)
-        } finally {
             cursor?.close()
-            return contacts.toList()
+            contacts.toList()
         }
     }
 
