@@ -6,4 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
+    <com.ismaeldivita.chipnavigation.ChipNavigationBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        app:cnb_addBottomInset="true"
+        app:cnb_addTopInset="true"
+        app:cnb_menuResource="@menu/menu_bottom_navigation"
+        app:cnb_unselectedColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/blocked_contacts"
+        android:icon="@drawable/ic_baseline_block_24"
+        android:title="@string/dashboard_item_blocked"
+        app:cnb_iconColor="?colorSurface" />
+
+    <item
+        android:id="@+id/call_logs"
+        android:icon="@drawable/ic_baseline_logs_24"
+        android:title="@string/dashboard_item_call_logs"
+        app:cnb_iconColor="?colorSurface" />
+
+    <item
+        android:id="@+id/contacts"
+        android:icon="@drawable/ic_baseline_contacts_24"
+        android:title="@string/dashboard_item_contacts"
+        app:cnb_iconColor="?colorSurface" />
+</menu>

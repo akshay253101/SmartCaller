@@ -7,4 +7,9 @@
 
     <!-- Permissions-->
     <string name="permission_denied">We need these permissions to block appropriate calls filtered by you.</string>
+
+    <!-- Bottom Navigation-->
+    <string name="dashboard_item_blocked">Blocked</string>
+    <string name="dashboard_item_call_logs">Call Logs</string>
+    <string name="dashboard_item_contacts">Contacts</string>
 </resources>
