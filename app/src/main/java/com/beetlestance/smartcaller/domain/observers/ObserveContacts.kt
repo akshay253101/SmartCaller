@@ -3,6 +3,7 @@ package com.beetlestance.smartcaller.domain.observers
 import androidx.paging.*
 import com.beetlestance.smartcaller.data.repository.ContactsRepository
 import com.beetlestance.smartcaller.data.states.Contact
+import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import com.beetlestance.smartcaller.domain.PagingUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -14,12 +15,23 @@ class ObserveContacts @Inject constructor(
 
     @OptIn(ExperimentalPagingApi::class)
     override fun createObservable(params: Params): Flow<PagingData<Contact>> {
+        var blockedContactsCount: Int? = null
+        var factory: PagingSource<Int, Contact>? = null
         return Pager(
             config = params.pagingConfig,
-            pagingSourceFactory = { contactsRepository.contactsPageSource() }
+            pagingSourceFactory = {
+                contactsRepository.contactsPageSource().also { factory = it }
+            }
         ).flow.combine(contactsRepository.observeBlockedContacts()) { pagingData, blockedContacts ->
+            if (blockedContactsCount == null) blockedContactsCount = blockedContacts.size
 
-            pagingData.map { contact ->
+            val isBlockListUpdated = blockedContactsCount != blockedContacts.size
+            if (isBlockListUpdated) {
+                blockedContactsCount = blockedContacts.size
+                factory?.invalidate()
+            }
+
+            pagingData.mapSync { contact ->
                 val blockedContact = blockedContacts.find { blockedContact ->
                     blockedContact.contactId == contact.id && blockedContact.number == contact.number
                 }

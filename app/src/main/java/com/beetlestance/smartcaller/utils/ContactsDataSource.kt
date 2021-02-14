@@ -25,7 +25,6 @@ class ContactsDataSource(
         }
     }
 
-
     private fun guessPrevKey(params: LoadParams<Int>, data: List<Contact>): Int? {
         return when (params) {
             is LoadParams.Refresh -> null
@@ -63,10 +62,6 @@ class ContactsDataSource(
                     null,
                     sort
                 )
-
-                registerInvalidatedCallback {
-                    cursor?.close()
-                }
 
                 cursor?.apply {
                     moveToFirst()

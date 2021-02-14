@@ -10,6 +10,7 @@ import com.beetlestance.smartcaller.domain.executors.AddToBlockList
 import com.beetlestance.smartcaller.domain.executors.RemoveFromBlockList
 import com.beetlestance.smartcaller.domain.observers.ObserveContacts
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

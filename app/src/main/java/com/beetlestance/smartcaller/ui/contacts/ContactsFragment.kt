@@ -47,7 +47,7 @@ class ContactsFragment :
     }
 
     private fun addObserver() {
-        lifecycleScope.launchWhenResumed {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.contactsPagedData.collect {
                 contactsAdapter?.submitData(it)
             }
