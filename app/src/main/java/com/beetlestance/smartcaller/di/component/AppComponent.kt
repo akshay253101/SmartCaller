@@ -1,6 +1,8 @@
 package com.beetlestance.smartcaller.di.component
 
 import com.beetlestance.smartcaller.SmartCallerApplication
+import com.beetlestance.smartcaller.data.datasource.AppDatabaseModule
+import com.beetlestance.smartcaller.data.datasource.DatabaseDaoModule
 import com.beetlestance.smartcaller.data.repository.di.RepositoryModule
 import com.beetlestance.smartcaller.di.modules.ActivityModule
 import com.beetlestance.smartcaller.di.modules.ApplicationModule
@@ -20,6 +22,8 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         ActivityModule::class,
         ApplicationModule::class,
+        AppDatabaseModule::class,
+        DatabaseDaoModule::class,
         RepositoryModule::class,
         BroadcastModule::class
     ]
