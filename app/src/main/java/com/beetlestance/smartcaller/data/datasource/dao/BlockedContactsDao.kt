@@ -15,8 +15,8 @@ abstract class BlockedContactsDao : EntityDao<BlockedContact>() {
     abstract fun contactsObservable(): Flow<List<BlockedContact>>
 
     @Transaction
-    @Query(value = "SELECT * FROM ${AppTables.BLOCKED_CONTACTS_TABLE} WHERE contact_id LIKE :contactId AND number LIKE :number")
-    abstract fun findContacts(contactId: Int, number: String): List<BlockedContact>
+    @Query(value = "SELECT * FROM ${AppTables.BLOCKED_CONTACTS_TABLE} WHERE number LIKE :number")
+    abstract fun findContacts(number: String): List<BlockedContact>
 
     companion object {
         private const val ALL_CONTACTS = "SELECT * FROM ${AppTables.BLOCKED_CONTACTS_TABLE}"

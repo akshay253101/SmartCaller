@@ -11,15 +11,12 @@ class BlockedContactsStore @Inject constructor(
 ) {
 
     suspend fun addBlockedContact(blockedContact: BlockedContact) {
-        val blockedContacts = blockedContactsDao.findContacts(
-            contactId = blockedContact.contactId,
-            number = blockedContact.number
-        )
+        val blockedContacts = blockedContactsDao.findContacts(blockedContact.number)
         if (blockedContacts.isEmpty()) blockedContactsDao.insert(blockedContact)
     }
 
-    suspend fun removeBlockedContact(contactId: Int, number: String) {
-        val blockedContacts = blockedContactsDao.findContacts(contactId, number)
+    suspend fun removeBlockedContact(number: String) {
+        val blockedContacts = blockedContactsDao.findContacts(number)
         blockedContactsDao.deleteEntity(blockedContacts)
     }
 

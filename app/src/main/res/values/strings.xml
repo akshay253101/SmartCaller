@@ -18,4 +18,5 @@
     <!-- Contacts-->
     <string name="contacts_title">Contacts</string>
     <string name="contacts_search_hint">Search Here</string>
+    <string name="call_logs_title">Call History</string>
 </resources>

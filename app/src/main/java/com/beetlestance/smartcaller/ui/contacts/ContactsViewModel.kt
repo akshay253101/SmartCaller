@@ -10,7 +10,6 @@ import com.beetlestance.smartcaller.domain.executors.AddToBlockList
 import com.beetlestance.smartcaller.domain.executors.RemoveFromBlockList
 import com.beetlestance.smartcaller.domain.observers.ObserveContacts
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,8 +30,8 @@ class ContactsViewModel @Inject constructor(
 
     fun updateBlockStatus(contact: Contact) {
         viewModelScope.launch {
-            if (contact.isBlocked) removeFromBlockList.executeSync(contact)
-            else addToBlockList.executeSync(contact)
+            if (contact.isBlocked) removeFromBlockList.executeSync(contact.number)
+            else addToBlockList.executeSync(contact.toBlockedContact())
         }
     }
 

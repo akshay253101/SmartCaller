@@ -2,24 +2,24 @@ package com.beetlestance.smartcaller.domain.observers
 
 import androidx.paging.*
 import com.beetlestance.smartcaller.data.repository.ContactsRepository
-import com.beetlestance.smartcaller.data.states.Contact
+import com.beetlestance.smartcaller.data.states.CallLog
 import com.beetlestance.smartcaller.domain.PagingUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
-class ObserveContacts @Inject constructor(
+class ObserveCallLogs @Inject constructor(
     private val contactsRepository: ContactsRepository
-) : PagingUseCase<ObserveContacts.Params, Contact>() {
+) : PagingUseCase<ObserveCallLogs.Params, CallLog>() {
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun createObservable(params: Params): Flow<PagingData<Contact>> {
+    override fun createObservable(params: Params): Flow<PagingData<CallLog>> {
         var blockedContactsCount: Int? = null
-        var factory: PagingSource<Int, Contact>? = null
+        var factory: PagingSource<Int, CallLog>? = null
         return Pager(
             config = params.pagingConfig,
             pagingSourceFactory = {
-                contactsRepository.contactsPageSource().also { factory = it }
+                contactsRepository.callLogsPageSource().also { factory = it }
             }
         ).flow.combine(contactsRepository.observeBlockedContacts()) { pagingData, blockedContacts ->
             if (blockedContactsCount == null) blockedContactsCount = blockedContacts.size
@@ -45,5 +45,5 @@ class ObserveContacts @Inject constructor(
     data class Params(
         override val pagingConfig: PagingConfig,
         val query: String = "%%"
-    ) : Parameters<Contact>
+    ) : Parameters<CallLog>
 }

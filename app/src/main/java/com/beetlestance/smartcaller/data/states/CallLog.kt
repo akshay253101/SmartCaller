@@ -2,15 +2,13 @@ package com.beetlestance.smartcaller.data.states
 
 import com.beetlestance.smartcaller.data.entities.BlockedContact
 
-data class Contact(
-
-    val id: Int,
+data class CallLog(
 
     val name: String,
 
     val number: String,
 
-    val lookUpKey: String,
+    val callType: Int,
 
     val isBlocked: Boolean = false,
 

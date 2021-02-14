@@ -31,7 +31,7 @@ class ContactsAdapter(private val viewModel: ContactsViewModel) :
     object DiffCallBack : DiffUtil.ItemCallback<Contact>() {
 
         override fun areItemsTheSame(oldItem: Contact, newItem: Contact): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.number == newItem.number
         }
 
         override fun areContentsTheSame(oldItem: Contact, newItem: Contact): Boolean {
