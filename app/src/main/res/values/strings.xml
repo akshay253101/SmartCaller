@@ -12,4 +12,6 @@
     <string name="dashboard_item_blocked">Blocked</string>
     <string name="dashboard_item_call_logs">Call Logs</string>
     <string name="dashboard_item_contacts">Contacts</string>
+    <string name="contacts_title">Contacts</string>
+    <string name="contacts_search_hint">Search Here</string>
 </resources>

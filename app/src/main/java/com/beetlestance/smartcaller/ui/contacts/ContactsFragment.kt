@@ -13,6 +13,7 @@ import com.beetlestance.smartcaller.ui.base.SmartCallerFragment
 import com.beetlestance.smartcaller.ui.contacts.adapter.ContactsAdapter
 import com.beetlestance.smartcaller.utils.extensions.hasPermissions
 import com.beetlestance.smartcaller.utils.extensions.showPermissionDeniedDialog
+import com.beetlestance.smartcaller.utils.showSoftInput
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
@@ -33,11 +34,11 @@ class ContactsFragment :
 
     private val startActivityForResult = registerForActivityResult(StartActivityForResult()) {}
 
-
     override fun onViewCreated(binding: FragmentContactsBinding, savedInstanceState: Bundle?) {
         checkPermission()
         initRecyclerView()
         addObserver()
+        setViewListeners()
     }
 
     private fun initRecyclerView() {
@@ -66,6 +67,14 @@ class ContactsFragment :
                 )
             }
             else -> requestReadLogPermissionLauncher.launch(READ_CONTACTS_PERMISSION)
+        }
+    }
+
+    private fun setViewListeners() {
+        requireBinding().fragmentContactsOpenSearchView.setOnClickListener {
+            requireBinding().fragmentContactsEditLayout.requestFocus()
+            requireActivity().showSoftInput(requireBinding().fragmentContactsEditText)
+            requireBinding().rootFragmentContacts.transitionToEnd()
         }
     }
 
