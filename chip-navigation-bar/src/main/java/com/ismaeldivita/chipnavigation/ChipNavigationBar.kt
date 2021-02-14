@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.transition.TransitionManager
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.LinearLayout
 import androidx.annotation.IntRange
 import androidx.annotation.MenuRes
 import androidx.constraintlayout.helper.widget.Flow
@@ -20,7 +18,6 @@ import com.ismaeldivita.chipnavigation.model.MenuStyle
 import com.ismaeldivita.chipnavigation.util.applyWindowInsets
 import com.ismaeldivita.chipnavigation.util.forEachChild
 import com.ismaeldivita.chipnavigation.util.getChildren
-import com.ismaeldivita.chipnavigation.util.updateLayoutParams
 import com.ismaeldivita.chipnavigation.view.HorizontalMenuItemView
 import com.ismaeldivita.chipnavigation.view.MenuItemView
 import com.ismaeldivita.chipnavigation.view.VerticalMenuItemView
@@ -234,7 +231,9 @@ class ChipNavigationBar @JvmOverloads constructor(
      *
      * @return menu item id or -1 if none item is selected
      */
-    fun getSelectedItemId(): Int = getSelectedItem()?.id ?: -1
+    val selectedItemId: Int
+        get() = getSelectedItem()?.id ?: -1
+
 
     /**
      * Remove the selected state from the current item and set the selected state to true
@@ -307,11 +306,11 @@ class ChipNavigationBar @JvmOverloads constructor(
         layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
     }
 
-    override fun onSaveInstanceState(): Parcelable? {
+    override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()
         return State(superState, Bundle()).apply {
             menuId = menuRes
-            selectedItem = getSelectedItemId()
+            selectedItem = selectedItemId
             badges = badgesState
             expanded = isExpanded
             enabled = getChildren().map { it.id to it.isEnabled }.toMap()

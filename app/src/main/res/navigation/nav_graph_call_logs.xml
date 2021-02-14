@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_call_logs"
+    app:startDestination="@id/callLogsFragment">
+
+    <fragment
+        android:id="@+id/callLogsFragment"
+        android:name="com.beetlestance.smartcaller.ui.logs.CallLogsFragment"
+        android:label="CallLogsFragment"
+        tools:layout="@layout/fragment_call_logs" />
+</navigation>
