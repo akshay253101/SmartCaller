@@ -7,7 +7,7 @@ import android.os.Build
 import android.telecom.TelecomManager
 import android.util.Log
 import com.android.internal.telephony.ITelephony
-import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
+import com.beetlestance.smartcaller.data.datasource.store.BlockedContactsStore
 import com.beetlestance.smartcaller.di.ApplicationContext
 import com.beetlestance.smartcaller.utils.isAtLeastVersion
 import javax.inject.Inject
@@ -17,6 +17,7 @@ import javax.inject.Singleton
 class IncomingCallManager @Inject constructor(
     @ApplicationContext applicationContext: Context,
     callStateListener: CallStateListener,
+    private val store: BlockedContactsStore
 ) : CallStateListener.OnInComingCallReceived {
 
     private val telephonyManager =
@@ -31,7 +32,7 @@ class IncomingCallManager @Inject constructor(
     }
 
     private fun checkAndBlockCaller(number: String) {
-        if (number == "9468330749") rejectCall()
+        if (store.isNumberBlocked(number)) rejectCall()
     }
 
     @SuppressLint("MissingPermission")

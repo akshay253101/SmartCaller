@@ -2,6 +2,7 @@ package com.beetlestance.smartcaller.data.datasource.store
 
 import com.beetlestance.smartcaller.data.datasource.dao.BlockedContactsDao
 import com.beetlestance.smartcaller.data.entities.BlockedContact
+import com.beetlestance.smartcaller.utils.validNumberOrNull
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,8 +11,14 @@ class BlockedContactsStore @Inject constructor(
     private val blockedContactsDao: BlockedContactsDao
 ) {
 
+    fun isNumberBlocked(phoneNumber: String): Boolean {
+        val number = phoneNumber.validNumberOrNull() ?: return false
+        return blockedContactsDao.findContacts(number).isNotEmpty()
+    }
+
     suspend fun addBlockedContact(blockedContact: BlockedContact) {
-        val blockedContacts = blockedContactsDao.findContacts(blockedContact.number)
+        val number = blockedContact.number.validNumberOrNull() ?: return
+        val blockedContacts = blockedContactsDao.findContacts(number)
         if (blockedContacts.isEmpty()) blockedContactsDao.insert(blockedContact)
     }
 

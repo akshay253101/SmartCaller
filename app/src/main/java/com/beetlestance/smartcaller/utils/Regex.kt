@@ -16,10 +16,12 @@ private fun String.removeISDCode(): String {
     var number: String = this
 
     // removes space if any
-    if (number.contains(" ")) number = replace(" ", "")
+    if (number.contains(" ")) number = number.replace(" ", "")
+
+    if (number.contains("-")) number = number.replace(" ", "")
 
     //removes
-    if (number.startsWith("+")) number = replace("+91", "")
+    if (number.startsWith("+")) number = number.replace("+91", "")
 
     return number
 }
