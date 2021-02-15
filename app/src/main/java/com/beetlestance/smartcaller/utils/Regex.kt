@@ -20,6 +20,8 @@ private fun String.removeISDCode(): String {
 
     if (number.contains("-")) number = number.replace("-", "")
 
+    if (number.startsWith("0")) number = number.replaceFirst("0", "")
+
     //removes
     if (number.startsWith("+")) number = number.replace("+91", "")
 
