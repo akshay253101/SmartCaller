@@ -23,21 +23,31 @@ class ContactsDataSource<T : Any>(
 
     private fun guessPrevKey(params: LoadParams<Int>, data: List<T>): Int? {
         return when (params) {
-            is LoadParams.Refresh -> null
-            is LoadParams.Prepend -> if (data.isEmpty()) null else params.key - data.size
+            is LoadParams.Refresh -> params.key
+            is LoadParams.Prepend -> {
+                if (data.isEmpty()) null else (params.key - data.size)
+            }
             is LoadParams.Append -> params.key
         }
     }
 
     private fun guessNextKey(params: LoadParams<Int>, data: List<T>): Int? {
         return when (params) {
-            is LoadParams.Refresh -> params.loadSize
+            is LoadParams.Refresh -> {
+                if (params.key == null) params.loadSize else (params.key ?: 0) + data.size
+            }
             is LoadParams.Prepend -> params.key
             is LoadParams.Append -> if (data.isEmpty()) null else params.key + data.size
         }
     }
 
     override fun getRefreshKey(state: PagingState<Int, T>): Int? {
-        return state.anchorPosition
+        return state.anchorPosition?.let { anchorPosition ->
+            // This loads starting from previous page, but since PagingConfig.initialLoadSize spans
+            // multiple pages, the initial load will still load items centered around
+            // anchorPosition. This also prevents needing to immediately launch prepend due to
+            // prefetchDistance.
+            state.closestPageToPosition(anchorPosition)?.prevKey
+        }
     }
 }

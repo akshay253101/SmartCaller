@@ -1,12 +1,13 @@
 package com.beetlestance.smartcaller.domain.observers
 
-import androidx.paging.*
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.beetlestance.smartcaller.data.repository.ContactsRepository
 import com.beetlestance.smartcaller.data.states.Contact
 import com.beetlestance.smartcaller.domain.PagingUseCase
-import com.beetlestance.smartcaller.utils.validNumberOrNull
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class ObserveContacts @Inject constructor(
@@ -15,32 +16,12 @@ class ObserveContacts @Inject constructor(
 
     @OptIn(ExperimentalPagingApi::class)
     override fun createObservable(params: Params): Flow<PagingData<Contact>> {
-        var blockedContactsCount: Int? = null
-        var factory: PagingSource<Int, Contact>? = null
         return Pager(
             config = params.pagingConfig,
             pagingSourceFactory = {
-                contactsRepository.contactsPageSource().also { factory = it }
+                contactsRepository.contactsPageSource()
             }
-        ).flow.combine(contactsRepository.observeBlockedContacts()) { pagingData, blockedContacts ->
-            if (blockedContactsCount == null) blockedContactsCount = blockedContacts.size
-
-            val isBlockListUpdated = blockedContactsCount != blockedContacts.size
-            if (isBlockListUpdated) {
-                blockedContactsCount = blockedContacts.size
-                factory?.invalidate()
-            }
-
-            pagingData.map { contact ->
-                val blockedContact = blockedContacts.find { blockedContact ->
-                    blockedContact.number == contact.number.validNumberOrNull()
-                }
-                contact.copy(
-                    isBlocked = blockedContact != null,
-                    blockedOn = blockedContact?.blockedOn
-                )
-            }
-        }
+        ).flow
     }
 
     data class Params(
