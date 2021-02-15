@@ -4,6 +4,7 @@ import androidx.paging.*
 import com.beetlestance.smartcaller.data.repository.ContactsRepository
 import com.beetlestance.smartcaller.data.states.CallLog
 import com.beetlestance.smartcaller.domain.PagingUseCase
+import com.beetlestance.smartcaller.utils.validNumberOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
@@ -32,7 +33,7 @@ class ObserveCallLogs @Inject constructor(
 
             pagingData.mapSync { contact ->
                 val blockedContact = blockedContacts.find { blockedContact ->
-                    blockedContact.number == contact.number
+                    blockedContact.number == contact.number.validNumberOrNull()
                 }
                 contact.copy(
                     isBlocked = blockedContact != null,

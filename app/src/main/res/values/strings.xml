@@ -4,8 +4,10 @@
     <!-- General-->
     <string name="general_key_okay">Okay</string>
     <string name="general_key_cancel">Cancel</string>
+    <string name="general_key_add">Add</string>
     <string name="general_block">Block</string>
     <string name="general_unblock">Unblock</string>
+    <string name="empty_string"> </string>
 
     <!-- Permissions-->
     <string name="permission_denied">We need these permissions to block appropriate calls filtered by you.</string>
@@ -19,4 +21,9 @@
     <string name="contacts_title">Contacts</string>
     <string name="contacts_search_hint">Search Here</string>
     <string name="call_logs_title">Call History</string>
+    <string name="add_contacts_title">Add New Contact</string>
+    <string name="blocked_contacts_title">Blocked</string>
+    <string name="blocked_contacts_add_number">Add Number</string>
+    <string name="add_new_contact_name_hint">Enter Name</string>
+    <string name="add_new_contact_mobile_number_hint">Enter Mobile Number</string>
 </resources>

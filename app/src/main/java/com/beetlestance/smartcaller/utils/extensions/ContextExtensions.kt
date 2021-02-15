@@ -6,9 +6,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import com.beetlestance.smartcaller.R
 import com.beetlestance.smartcaller.utils.isAtLeastVersion
@@ -59,4 +63,44 @@ fun Context.showPermissionDeniedDialog(
             dialog.dismiss()
         }
         .show()
+}
+
+fun Context.createMaterialAlertDialog(
+    @StringRes title: Int = R.string.empty_string,
+    @StringRes message: Int = R.string.empty_string,
+    @StringRes negativeActionMsg: Int = R.string.empty_string,
+    @StringRes positiveActionMsg: Int = R.string.empty_string,
+    positiveAction: () -> Unit = {},
+    negativeAction: () -> Unit = {},
+    @LayoutRes layoutId: Int? = null,
+    @DrawableRes iconId: Int? = null,
+    cancelable: Boolean = true,
+    viewBinding: ViewDataBinding? = null,
+): AlertDialog {
+    val dialogBuilder = MaterialAlertDialogBuilder(this).setCancelable(cancelable)
+
+    if (title != R.string.empty_string) dialogBuilder.setTitle(title)
+
+    if (message != R.string.empty_string) dialogBuilder.setMessage(message)
+
+    if (negativeActionMsg != R.string.empty_string) {
+        dialogBuilder.setNegativeButton(negativeActionMsg) { dialog, _ ->
+            negativeAction()
+            dialog.cancel()
+        }
+    }
+
+    if (positiveActionMsg != R.string.empty_string) {
+        dialogBuilder.setPositiveButton(positiveActionMsg) { dialog, _ ->
+            positiveAction()
+            dialog.cancel()
+        }
+    }
+
+    if (layoutId != null) dialogBuilder.setView(layoutId)
+    else if (viewBinding != null) dialogBuilder.setView(viewBinding.root)
+
+    if (iconId != null) dialogBuilder.setIcon(iconId)
+
+    return dialogBuilder.create()
 }

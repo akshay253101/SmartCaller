@@ -22,7 +22,8 @@ class BlockedContactsStore @Inject constructor(
         if (blockedContacts.isEmpty()) blockedContactsDao.insert(blockedContact.copy(number = number))
     }
 
-    suspend fun removeBlockedContact(number: String) {
+    suspend fun removeBlockedContact(phoneNumber: String) {
+        val number = phoneNumber.validNumberOrNull() ?: return
         val blockedContacts = blockedContactsDao.findContacts(number)
         blockedContactsDao.deleteEntity(blockedContacts)
     }
