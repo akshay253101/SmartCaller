@@ -20,7 +20,7 @@ object Libs {
     }
 
     object AndroidX {
-        const val appcompat: String = "androidx.appcompat:appcompat:1.3.0-alpha02"
+        const val appcompat: String = "androidx.appcompat:appcompat:1.3.0-alpha01"
         const val coreKtx: String = "androidx.core:core-ktx:1.5.0-alpha05"
         const val paging = "androidx.paging:paging-runtime-ktx:3.0.0-alpha11"
 

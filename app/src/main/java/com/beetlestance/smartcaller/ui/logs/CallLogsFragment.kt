@@ -2,7 +2,6 @@ package com.beetlestance.smartcaller.ui.logs
 
 import android.Manifest
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.beetlestance.smartcaller.R
@@ -31,14 +30,6 @@ class CallLogsFragment :
 
     private var callLogsAdapter: CallLogsAdapter? = null
 
-    private val requestReadLogPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted.not()) checkPermission()
-        }
-
-    private val startActivityForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-
     override fun onViewCreated(binding: FragmentCallLogsBinding, savedInstanceState: Bundle?) {
         checkPermission()
         initRecyclerView()
@@ -66,12 +57,12 @@ class CallLogsFragment :
                 requireContext().showPermissionDeniedDialog(
                     description = R.string.permission_denied,
                     onPositiveResponse = { settingsIntent ->
-                        startActivityForResult.launch(settingsIntent)
+                        startActivityForResult(settingsIntent,1239)
                     },
                     onNegativeResponse = {}
                 )
             }
-            else -> requestReadLogPermissionLauncher.launch(READ_CALL_LOGS_PERMISSION)
+            else -> requestPermissions(arrayOf(READ_CALL_LOGS_PERMISSION), 1045)
         }
     }
 

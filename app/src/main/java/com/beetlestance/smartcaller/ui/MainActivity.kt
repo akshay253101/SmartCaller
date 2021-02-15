@@ -1,12 +1,8 @@
 package com.beetlestance.smartcaller.ui
 
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.beetlestance.smartcaller.R
 import com.beetlestance.smartcaller.constants.SmartCallerRequiredPermissions
@@ -28,11 +24,6 @@ class MainActivity : DaggerAppCompatActivity(R.layout.activity_main) {
 
     @Inject
     lateinit var dispatchers: AppCoroutineDispatchers
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val viewModel: MainActivityViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,16 +66,12 @@ class MainActivity : DaggerAppCompatActivity(R.layout.activity_main) {
     private fun handlePermissionDenial() {
         showPermissionDeniedDialog(description = R.string.permission_denied,
             onPositiveResponse = { settingsIntent ->
-                startActivityForResult.launch(settingsIntent)
+                startActivityForResult(settingsIntent,1045)
             },
             onNegativeResponse = {
                 finish()
             }
         )
-    }
-
-    private val startActivityForResult: ActivityResultLauncher<Intent> by lazy {
-        registerForActivityResult(StartActivityForResult()) {}
     }
 
 }

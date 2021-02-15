@@ -2,8 +2,6 @@ package com.beetlestance.smartcaller.ui.contacts
 
 import android.Manifest
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.beetlestance.smartcaller.R
@@ -32,13 +30,6 @@ class ContactsFragment :
 
     private var contactsAdapter: ContactsAdapter? = null
 
-    private val requestReadLogPermissionLauncher =
-        registerForActivityResult(RequestPermission()) { isGranted ->
-            if (isGranted.not()) checkPermission()
-        }
-
-    private val startActivityForResult = registerForActivityResult(StartActivityForResult()) {}
-
     override fun onViewCreated(binding: FragmentContactsBinding, savedInstanceState: Bundle?) {
         checkPermission()
         initRecyclerView()
@@ -66,12 +57,12 @@ class ContactsFragment :
                 requireContext().showPermissionDeniedDialog(
                     description = R.string.permission_denied,
                     onPositiveResponse = { settingsIntent ->
-                        startActivityForResult.launch(settingsIntent)
+                        startActivityForResult(settingsIntent,1056)
                     },
                     onNegativeResponse = {}
                 )
             }
-            else -> requestReadLogPermissionLauncher.launch(READ_CONTACTS_PERMISSION)
+            else -> requestPermissions(arrayOf(READ_CONTACTS_PERMISSION), 1045)
         }
     }
 
