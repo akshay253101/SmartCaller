@@ -10,6 +10,8 @@ import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import com.beetlestance.smartcaller.di.viewmodelfactory.ViewModelFactory
 import com.beetlestance.smartcaller.ui.base.SmartCallerFragment
 import com.beetlestance.smartcaller.ui.logs.adapter.CallLogsAdapter
+import com.beetlestance.smartcaller.utils.callmanager.CallStateManager
+import com.beetlestance.smartcaller.utils.callmanager.CallStateManager.CallState
 import com.beetlestance.smartcaller.utils.extensions.hasPermissions
 import com.beetlestance.smartcaller.utils.extensions.showPermissionDeniedDialog
 import com.beetlestance.smartcaller.utils.showSoftInput
@@ -27,6 +29,9 @@ class CallLogsFragment :
 
     @Inject
     lateinit var dispatchers: AppCoroutineDispatchers
+
+    @Inject
+    lateinit var callStateManager: CallStateManager
 
     private val viewModel: CallLogsViewModel by viewModels { viewModelFactory }
 
@@ -47,9 +52,16 @@ class CallLogsFragment :
     private fun addObserver() {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.callLogPagedData.collectLatest {
-                withContext(dispatchers.io){
+                withContext(dispatchers.io) {
                     callLogsAdapter?.submitData(it)
                 }
+            }
+        }
+
+
+        viewLifecycleOwner.lifecycleScope.launch(dispatchers.main) {
+            callStateManager.callState.collect { state ->
+                if (state != CallState.IDLE) callLogsAdapter?.refresh()
             }
         }
     }
@@ -61,7 +73,7 @@ class CallLogsFragment :
                 requireContext().showPermissionDeniedDialog(
                     description = R.string.permission_denied,
                     onPositiveResponse = { settingsIntent ->
-                        startActivityForResult(settingsIntent,1239)
+                        startActivityForResult(settingsIntent, 1239)
                     },
                     onNegativeResponse = {}
                 )

@@ -18,7 +18,7 @@ private fun String.removeISDCode(): String {
     // removes space if any
     if (number.contains(" ")) number = number.replace(" ", "")
 
-    if (number.contains("-")) number = number.replace(" ", "")
+    if (number.contains("-")) number = number.replace("-", "")
 
     //removes
     if (number.startsWith("+")) number = number.replace("+91", "")

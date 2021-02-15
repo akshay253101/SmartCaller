@@ -107,7 +107,7 @@ class CallStateManager @Inject constructor(
         applicationContext.testNotification(number = number)
     }
 
-    enum class CallState() {
+    enum class CallState {
         IDLE,
         OUTGOING_CALL_STARTED,
         OUTGOING_CALL_ENDED,
