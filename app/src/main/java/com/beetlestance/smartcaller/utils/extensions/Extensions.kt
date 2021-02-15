@@ -48,22 +48,3 @@ fun Activity.showSoftInput(view: View) {
         imm.showSoftInput(view, 0)
     }
 }
-
-const val TESTING_CHANNEL_NAME: String = "Testing Purpose"
-const val TESTING_CHANNEL_ID: String = "testing"
-const val TESTING_CHANNEL_DESC: String = "For testing purpose only"
-
-fun Context.testNotification(number: String) {
-    // Build the notification and add the action.
-
-    val newMessageNotification = NotificationCompat.Builder(this, TESTING_CHANNEL_NAME)
-        .setSmallIcon(R.drawable.ic_launcher_background)
-        .setContentTitle("A call has been blocked")
-        .setContentText(number)
-        .build()
-
-    // Issue the notification.
-    with(NotificationManagerCompat.from(this)) {
-        notify(TESTING_CHANNEL_ID.hashCode(), newMessageNotification)
-    }
-}

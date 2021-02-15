@@ -1,7 +1,9 @@
 package com.beetlestance.smartcaller
 
-import androidx.fragment.app.FragmentManager
+import android.os.Build
 import com.beetlestance.smartcaller.di.component.DaggerAppComponent
+import com.beetlestance.smartcaller.utils.extensions.createNotificationChannel
+import com.beetlestance.smartcaller.utils.isAtLeastVersion
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 
@@ -12,5 +14,10 @@ class SmartCallerApplication : DaggerApplication() {
      */
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent.factory().create(this)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        if (isAtLeastVersion(Build.VERSION_CODES.O)) createNotificationChannel()
     }
 }

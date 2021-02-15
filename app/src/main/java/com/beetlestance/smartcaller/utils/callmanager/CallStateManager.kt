@@ -11,8 +11,8 @@ import android.util.Log
 import com.android.internal.telephony.ITelephony
 import com.beetlestance.smartcaller.data.datasource.store.BlockedContactsStore
 import com.beetlestance.smartcaller.di.ApplicationContext
+import com.beetlestance.smartcaller.utils.extensions.testNotification
 import com.beetlestance.smartcaller.utils.isAtLeastVersion
-import com.beetlestance.smartcaller.utils.testNotification
 import com.beetlestance.smartcaller.utils.validNumberOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
