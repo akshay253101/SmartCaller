@@ -25,7 +25,7 @@ class CallLogsViewModel @Inject constructor(
     private val pagingConfig = PagingConfig(pageSize = 20, initialLoadSize = 30)
 
     val callLogPagedData: Flow<PagingData<CallLog>>
-        get() = observeCallLogs.observe().flowOn(dispatchers.io).cachedIn(viewModelScope)
+        get() = observeCallLogs.observe().cachedIn(viewModelScope)
 
     init {
         observeCallLogs(params = ObserveCallLogs.Params(pagingConfig = pagingConfig))

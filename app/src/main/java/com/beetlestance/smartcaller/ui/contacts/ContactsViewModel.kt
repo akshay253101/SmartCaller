@@ -25,7 +25,7 @@ class ContactsViewModel @Inject constructor(
     private val pagingConfig = PagingConfig(pageSize = 20, initialLoadSize = 30)
 
     val contactsPagedData: Flow<PagingData<Contact>>
-        get() = observeContacts.observe().flowOn(dispatchers.io).cachedIn(viewModelScope)
+        get() = observeContacts.observe().cachedIn(viewModelScope)
 
     init {
         observeContacts(params = ObserveContacts.Params(pagingConfig = pagingConfig))
