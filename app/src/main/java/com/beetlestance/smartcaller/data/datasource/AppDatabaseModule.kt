@@ -15,6 +15,6 @@ class AppDatabaseModule {
     fun provideDatabase(@ApplicationContext applicationContext: Context) = Room.databaseBuilder(
         applicationContext,
         AppDatabase::class.java, "smart_caller.db"
-    ).build()
+    ).allowMainThreadQueries().build()
 
 }
