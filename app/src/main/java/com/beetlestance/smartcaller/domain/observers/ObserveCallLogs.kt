@@ -18,12 +18,12 @@ class ObserveCallLogs @Inject constructor(
     override fun createObservable(params: Params): Flow<PagingData<CallLog>> {
         return Pager(
             config = params.pagingConfig,
-            pagingSourceFactory = { contactsRepository.callLogsPageSource() }
+            pagingSourceFactory = { contactsRepository.callLogsPageSource(query = params.query) }
         ).flow
     }
 
     data class Params(
         override val pagingConfig: PagingConfig,
-        val query: String = "%%"
+        val query: String = ""
     ) : Parameters<CallLog>
 }

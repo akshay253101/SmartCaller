@@ -63,4 +63,8 @@ class CallLogsViewModel @Inject constructor(
         }
     }
 
+    fun executeQuery(query: String) {
+        observeCallLogs(params = ObserveCallLogs.Params(query = query, pagingConfig = pagingConfig))
+    }
+
 }

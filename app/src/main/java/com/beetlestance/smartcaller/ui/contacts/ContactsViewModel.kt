@@ -67,4 +67,8 @@ class ContactsViewModel @Inject constructor(
         }
     }
 
+    fun executeQuery(query: String) {
+        observeContacts(params = ObserveContacts.Params(query = query, pagingConfig = pagingConfig))
+    }
+
 }

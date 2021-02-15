@@ -67,7 +67,7 @@ class BlockedFragment :
         }
 
         requireBinding().fragmentBlockedContactsEditLayout.editText?.doOnTextChanged { text, _, _, _ ->
-            if (text.isNullOrBlank().not()) viewModel.executeQuery(text.toString())
+            viewModel.executeQuery(text.toString())
         }
 
         requireBinding().fragmentBlockedContactsAddNewNumber.setOnClickListener {

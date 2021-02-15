@@ -3,6 +3,8 @@ package com.beetlestance.smartcaller.ui.contacts
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.activity.addCallback
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.beetlestance.smartcaller.R
@@ -70,6 +72,19 @@ class ContactsFragment :
     }
 
     private fun setViewListeners() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (requireBinding().rootFragmentContacts.progress != 0f) {
+                requireBinding().rootFragmentContacts.transitionToStart()
+            } else {
+                isEnabled = false
+                requireActivity().onBackPressed()
+            }
+        }
+
+        requireBinding().fragmentContactsEditLayout.editText?.doOnTextChanged { text, _, _, _ ->
+            viewModel.executeQuery(text.toString())
+        }
+
         requireBinding().fragmentContactsOpenSearchView.setOnClickListener {
             requireBinding().fragmentContactsEditLayout.requestFocus()
             requireActivity().showSoftInput(requireBinding().fragmentContactsEditText)

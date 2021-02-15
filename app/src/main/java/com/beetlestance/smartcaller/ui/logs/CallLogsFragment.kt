@@ -2,6 +2,8 @@ package com.beetlestance.smartcaller.ui.logs
 
 import android.Manifest
 import android.os.Bundle
+import androidx.activity.addCallback
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.beetlestance.smartcaller.R
@@ -58,7 +60,6 @@ class CallLogsFragment :
             }
         }
 
-
         viewLifecycleOwner.lifecycleScope.launch(dispatchers.main) {
             callStateManager.callState.collect { state ->
                 if (state != CallState.IDLE) callLogsAdapter?.refresh()
@@ -83,6 +84,19 @@ class CallLogsFragment :
     }
 
     private fun setViewListeners() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (requireBinding().rootFragmentCallLogs.progress != 0f) {
+                requireBinding().rootFragmentCallLogs.transitionToStart()
+            } else {
+                isEnabled = false
+                requireActivity().onBackPressed()
+            }
+        }
+
+        requireBinding().fragmentCallLogsEditLayout.editText?.doOnTextChanged { text, _, _, _ ->
+            viewModel.executeQuery(text.toString())
+        }
+
         requireBinding().fragmentCallLogsOpenSearchView.setOnClickListener {
             requireBinding().fragmentCallLogsEditLayout.requestFocus()
             requireActivity().showSoftInput(requireBinding().fragmentCallLogsEditText)

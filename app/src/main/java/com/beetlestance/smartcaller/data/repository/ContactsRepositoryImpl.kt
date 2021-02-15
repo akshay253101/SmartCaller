@@ -23,12 +23,16 @@ class ContactsRepositoryImpl @Inject constructor(
     private val dispatchers: AppCoroutineDispatchers
 ) : ContactsRepository {
 
-    override fun contactsPageSource(): PagingSource<Int, Contact> {
-        return ContactsDataSource(dispatchers, ::mapQueryToContacts)
+    override fun contactsPageSource(query: String): PagingSource<Int, Contact> {
+        return ContactsDataSource(dispatchers) { pageSize, key ->
+            mapQueryToContacts(pageSize, key, query)
+        }
     }
 
-    override fun callLogsPageSource(): PagingSource<Int, CallLog> {
-        return ContactsDataSource(dispatchers, ::mapQueryToCallLogs)
+    override fun callLogsPageSource(query: String): PagingSource<Int, CallLog> {
+        return ContactsDataSource(dispatchers) { pageSize, key ->
+            mapQueryToCallLogs(pageSize, key, query)
+        }
     }
 
     override fun observeBlockedContacts(query: String): Flow<List<BlockedContact>> {
@@ -43,7 +47,7 @@ class ContactsRepositoryImpl @Inject constructor(
         blockedContactsStore.removeBlockedContact(number)
     }
 
-    private suspend fun mapQueryToContacts(pageSize: Int, key: Int?): List<Contact> {
+    private suspend fun mapQueryToContacts(pageSize: Int, key: Int?, query: String): List<Contact> {
         return withContext(dispatchers.io) {
             val contacts = mutableListOf<Contact>()
             var cursor: Cursor? = null
@@ -52,11 +56,19 @@ class ContactsRepositoryImpl @Inject constructor(
                 var sort = Phone.DISPLAY_NAME + " ASC LIMIT " + pageSize
                 if (key != null) sort = "$sort OFFSET $key"
 
+                val selectionQuery = if (query.isNotBlank()) {
+                    "${Phone.NUMBER} LIKE ? OR ${Phone.DISPLAY_NAME} LIKE ?"
+                } else null
+
+                val selectionArgs = if (selectionQuery != null) {
+                    arrayOf("%$query%", "%$query%")
+                } else null
+
                 cursor = applicationContext.contentResolver.query(
                     Phone.CONTENT_URI,
                     arrayOf(Phone.CONTACT_ID, Phone.LOOKUP_KEY, Phone.NUMBER, Phone.DISPLAY_NAME),
-                    null,
-                    null,
+                    selectionQuery,
+                    selectionArgs,
                     sort
                 )
 
@@ -84,7 +96,7 @@ class ContactsRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun mapQueryToCallLogs(pageSize: Int, key: Int?): List<CallLog> {
+    private suspend fun mapQueryToCallLogs(pageSize: Int, key: Int?, query: String): List<CallLog> {
         return withContext(dispatchers.io) {
             val logs = mutableListOf<CallLog>()
             var cursor: Cursor? = null
@@ -93,11 +105,19 @@ class ContactsRepositoryImpl @Inject constructor(
                 var sort = Calls.DATE + " DESC ${Calls.LIMIT_PARAM_KEY} " + pageSize
                 if (key != null) sort = "$sort ${Calls.OFFSET_PARAM_KEY} $key"
 
+                val selectionQuery = if (query.isNotBlank()) {
+                    "${Calls.NUMBER} LIKE ? OR ${Calls.CACHED_NAME} LIKE ?"
+                } else null
+
+                val selectionArgs = if (selectionQuery != null) {
+                    arrayOf("%$query%", "%$query%")
+                } else null
+
                 cursor = applicationContext.contentResolver.query(
                     Calls.CONTENT_URI,
                     arrayOf(Calls.CACHED_NAME, Calls.TYPE, Calls.NUMBER),
-                    null,
-                    null,
+                    selectionQuery,
+                    selectionArgs,
                     sort
                 )
 

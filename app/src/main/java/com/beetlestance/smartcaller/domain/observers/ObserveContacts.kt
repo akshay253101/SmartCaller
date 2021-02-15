@@ -18,14 +18,12 @@ class ObserveContacts @Inject constructor(
     override fun createObservable(params: Params): Flow<PagingData<Contact>> {
         return Pager(
             config = params.pagingConfig,
-            pagingSourceFactory = {
-                contactsRepository.contactsPageSource()
-            }
+            pagingSourceFactory = { contactsRepository.contactsPageSource(query = params.query) }
         ).flow
     }
 
     data class Params(
         override val pagingConfig: PagingConfig,
-        val query: String = "%%"
+        val query: String = ""
     ) : Parameters<Contact>
 }

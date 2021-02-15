@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface ContactsRepository {
 
-    fun contactsPageSource(): PagingSource<Int, Contact>
+    fun contactsPageSource(query: String): PagingSource<Int, Contact>
 
-    fun callLogsPageSource(): PagingSource<Int, CallLog>
+    fun callLogsPageSource(query: String): PagingSource<Int, CallLog>
 
     fun observeBlockedContacts(query: String): Flow<List<BlockedContact>>
 
