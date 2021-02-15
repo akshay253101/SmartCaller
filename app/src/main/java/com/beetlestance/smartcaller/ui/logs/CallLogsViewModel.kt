@@ -22,7 +22,7 @@ class CallLogsViewModel @Inject constructor(
     private val removeFromBlockList: RemoveFromBlockList
 ) : ViewModel() {
 
-    private val pagingConfig = PagingConfig(pageSize = 20, initialLoadSize = 30)
+    private val pagingConfig = PagingConfig(pageSize = 10, initialLoadSize = 20)
 
     val callLogPagedData: Flow<PagingData<CallLog>>
         get() = observeCallLogs.observe().cachedIn(viewModelScope)

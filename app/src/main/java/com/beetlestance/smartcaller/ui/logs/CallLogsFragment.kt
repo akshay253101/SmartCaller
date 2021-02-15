@@ -15,6 +15,7 @@ import com.beetlestance.smartcaller.utils.extensions.showPermissionDeniedDialog
 import com.beetlestance.smartcaller.utils.showSoftInput
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CallLogsFragment :
@@ -43,9 +44,11 @@ class CallLogsFragment :
     }
 
     private fun addObserver() {
-        viewLifecycleOwner.lifecycleScope.launch(dispatchers.io) {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.callLogPagedData.collect {
-                callLogsAdapter?.submitData(it)
+                withContext(dispatchers.io){
+                    callLogsAdapter?.submitData(it)
+                }
             }
         }
     }

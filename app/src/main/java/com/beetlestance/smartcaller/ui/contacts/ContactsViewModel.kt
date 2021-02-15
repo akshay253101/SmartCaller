@@ -11,7 +11,6 @@ import com.beetlestance.smartcaller.domain.executors.AddToBlockList
 import com.beetlestance.smartcaller.domain.executors.RemoveFromBlockList
 import com.beetlestance.smartcaller.domain.observers.ObserveContacts
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,12 +21,16 @@ class ContactsViewModel @Inject constructor(
     private val removeFromBlockList: RemoveFromBlockList
 ) : ViewModel() {
 
-    private val pagingConfig = PagingConfig(pageSize = 20, initialLoadSize = 30)
+    private val pagingConfig = PagingConfig(pageSize = 10, initialLoadSize = 20)
 
     val contactsPagedData: Flow<PagingData<Contact>>
         get() = observeContacts.observe().cachedIn(viewModelScope)
 
     init {
+        observeContacts()
+    }
+
+    fun observeContacts() {
         observeContacts(params = ObserveContacts.Params(pagingConfig = pagingConfig))
     }
 

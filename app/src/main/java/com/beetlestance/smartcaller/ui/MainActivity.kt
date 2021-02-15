@@ -8,7 +8,6 @@ import com.beetlestance.smartcaller.R
 import com.beetlestance.smartcaller.constants.SmartCallerRequiredPermissions
 import com.beetlestance.smartcaller.databinding.ActivityMainBinding
 import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
-import com.beetlestance.smartcaller.di.viewmodelfactory.ViewModelFactory
 import com.beetlestance.smartcaller.utils.callmanager.CallStateManager
 import com.beetlestance.smartcaller.utils.extensions.requestRequiredPermissions
 import com.beetlestance.smartcaller.utils.extensions.showPermissionDeniedDialog

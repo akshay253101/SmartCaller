@@ -1,6 +1,7 @@
 package com.beetlestance.smartcaller.ui.contacts
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -57,7 +58,7 @@ class ContactsFragment :
                 requireContext().showPermissionDeniedDialog(
                     description = R.string.permission_denied,
                     onPositiveResponse = { settingsIntent ->
-                        startActivityForResult(settingsIntent,1056)
+                        startActivityForResult(settingsIntent, 1056)
                     },
                     onNegativeResponse = {}
                 )
@@ -71,6 +72,17 @@ class ContactsFragment :
             requireBinding().fragmentContactsEditLayout.requestFocus()
             requireActivity().showSoftInput(requireBinding().fragmentContactsEditText)
             requireBinding().rootFragmentContacts.transitionToEnd()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1045 && permissions[0] == READ_CONTACTS_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) viewModel.observeContacts()
         }
     }
 
