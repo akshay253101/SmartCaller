@@ -78,7 +78,7 @@ dependencies {
 
     // Projects
     implementation(project(":chip-navigation-bar"))
-    
+
     // Testing
     testImplementation(Libs.Test.junit)
     androidTestImplementation(Libs.AndroidX.Test.junit)
@@ -88,6 +88,7 @@ dependencies {
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.coreKtx)
     implementation(Libs.AndroidX.paging)
+    implementation(Libs.AndroidX.constraints)
 
     // Kotlin
     implementation(Libs.Kotlin.stdlib)

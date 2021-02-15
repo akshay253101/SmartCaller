@@ -13,6 +13,7 @@ import com.beetlestance.smartcaller.domain.executors.AddToBlockList
 import com.beetlestance.smartcaller.domain.executors.RemoveFromBlockList
 import com.beetlestance.smartcaller.domain.observers.ObserveBlockedContacts
 import com.beetlestance.smartcaller.domain.observers.ObserveCallLogs
+import com.beetlestance.smartcaller.domain.observers.ObserveContacts
 import com.beetlestance.smartcaller.utils.validNumberOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -53,6 +54,10 @@ class CallLogsViewModel @Inject constructor(
 
     init {
         observeBlockedContacts(ObserveBlockedContacts.FETCH_ALL)
+        observeCallLogs(params = ObserveCallLogs.Params(pagingConfig = pagingConfig))
+    }
+
+    fun observeCollLogs() {
         observeCallLogs(params = ObserveCallLogs.Params(pagingConfig = pagingConfig))
     }
 

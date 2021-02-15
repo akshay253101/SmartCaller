@@ -31,7 +31,6 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/fragment_contacts_open_search_view"
-            style="@style/MaterialAlertDialog.MaterialComponents.Title.Icon"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="16dp"

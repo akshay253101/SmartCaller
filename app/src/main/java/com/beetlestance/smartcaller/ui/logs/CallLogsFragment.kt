@@ -1,6 +1,7 @@
 package com.beetlestance.smartcaller.ui.logs
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.core.widget.doOnTextChanged
@@ -11,6 +12,7 @@ import com.beetlestance.smartcaller.databinding.FragmentCallLogsBinding
 import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import com.beetlestance.smartcaller.di.viewmodelfactory.ViewModelFactory
 import com.beetlestance.smartcaller.ui.base.SmartCallerFragment
+import com.beetlestance.smartcaller.ui.contacts.ContactsFragment
 import com.beetlestance.smartcaller.ui.logs.adapter.CallLogsAdapter
 import com.beetlestance.smartcaller.utils.callmanager.CallStateManager
 import com.beetlestance.smartcaller.utils.callmanager.CallStateManager.CallState
@@ -67,22 +69,6 @@ class CallLogsFragment :
         }
     }
 
-    private fun checkPermission() {
-        when {
-            requireContext().hasPermissions(READ_CALL_LOGS_PERMISSION) -> Unit
-            shouldShowRequestPermissionRationale(READ_CALL_LOGS_PERMISSION) -> {
-                requireContext().showPermissionDeniedDialog(
-                    description = R.string.permission_denied,
-                    onPositiveResponse = { settingsIntent ->
-                        startActivityForResult(settingsIntent, 1239)
-                    },
-                    onNegativeResponse = {}
-                )
-            }
-            else -> requestPermissions(arrayOf(READ_CALL_LOGS_PERMISSION), 1045)
-        }
-    }
-
     private fun setViewListeners() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (requireBinding().rootFragmentCallLogs.progress != 0f) {
@@ -101,6 +87,34 @@ class CallLogsFragment :
             requireBinding().fragmentCallLogsEditLayout.requestFocus()
             requireActivity().showSoftInput(requireBinding().fragmentCallLogsEditText)
             requireBinding().rootFragmentCallLogs.transitionToEnd()
+        }
+    }
+
+
+    private fun checkPermission() {
+        when {
+            requireContext().hasPermissions(READ_CALL_LOGS_PERMISSION) -> Unit
+            shouldShowRequestPermissionRationale(READ_CALL_LOGS_PERMISSION) -> {
+                requireContext().showPermissionDeniedDialog(
+                    description = R.string.permission_denied,
+                    onPositiveResponse = { settingsIntent ->
+                        startActivityForResult(settingsIntent, 1239)
+                    },
+                    onNegativeResponse = {}
+                )
+            }
+            else -> requestPermissions(arrayOf(READ_CALL_LOGS_PERMISSION), 1045)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1047 && permissions[0] == ContactsFragment.READ_CONTACTS_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) viewModel.observeCollLogs()
         }
     }
 

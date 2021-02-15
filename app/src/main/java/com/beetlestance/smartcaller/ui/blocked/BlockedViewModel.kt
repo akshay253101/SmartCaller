@@ -1,7 +1,6 @@
 package com.beetlestance.smartcaller.ui.blocked
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.beetlestance.smartcaller.data.entities.BlockedContact
 import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import com.beetlestance.smartcaller.domain.executors.AddToBlockList
@@ -20,6 +19,8 @@ class BlockedViewModel @Inject constructor(
 
     val blockedContacts: Flow<List<BlockedContact>>
         get() = observeBlockedContacts.observe()
+
+    val isDataEmpty: LiveData<Boolean> = blockedContacts.asLiveData().map { data -> data.isEmpty() }
 
     init {
         observeBlockedContacts(ObserveBlockedContacts.FETCH_ALL)

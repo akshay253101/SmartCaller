@@ -55,22 +55,6 @@ class ContactsFragment :
         }
     }
 
-    private fun checkPermission() {
-        when {
-            requireContext().hasPermissions(READ_CONTACTS_PERMISSION) -> Unit
-            shouldShowRequestPermissionRationale(READ_CONTACTS_PERMISSION) -> {
-                requireContext().showPermissionDeniedDialog(
-                    description = R.string.permission_denied,
-                    onPositiveResponse = { settingsIntent ->
-                        startActivityForResult(settingsIntent, 1056)
-                    },
-                    onNegativeResponse = {}
-                )
-            }
-            else -> requestPermissions(arrayOf(READ_CONTACTS_PERMISSION), 1045)
-        }
-    }
-
     private fun setViewListeners() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (requireBinding().rootFragmentContacts.progress != 0f) {
@@ -92,13 +76,29 @@ class ContactsFragment :
         }
     }
 
+    private fun checkPermission() {
+        when {
+            requireContext().hasPermissions(READ_CONTACTS_PERMISSION) -> Unit
+            shouldShowRequestPermissionRationale(READ_CONTACTS_PERMISSION) -> {
+                requireContext().showPermissionDeniedDialog(
+                    description = R.string.permission_denied,
+                    onPositiveResponse = { settingsIntent ->
+                        startActivityForResult(settingsIntent, 1056)
+                    },
+                    onNegativeResponse = {}
+                )
+            }
+            else -> requestPermissions(arrayOf(READ_CONTACTS_PERMISSION), 1045)
+        }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 1045 && permissions[0] == READ_CONTACTS_PERMISSION) {
+        if (requestCode == 1047 && permissions[0] == READ_CONTACTS_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) viewModel.observeContacts()
         }
     }

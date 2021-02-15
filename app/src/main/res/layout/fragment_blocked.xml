@@ -3,6 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="blockedContactsViewModel"
+            type="com.beetlestance.smartcaller.ui.blocked.BlockedViewModel" />
+
+    </data>
+
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/root_fragment_blocked_contacts"
         android:layout_width="match_parent"
@@ -31,7 +39,6 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/fragment_blocked_contacts_open_search_view"
-            style="@style/MaterialAlertDialog.MaterialComponents.Title.Icon"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="16dp"
@@ -85,14 +92,28 @@
             android:id="@+id/fragment_blocked_contacts_add_new_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/blocked_contacts_add_number"
             android:layout_marginBottom="16dp"
+            android:contentDescription="@string/blocked_contacts_add_number"
             android:src="@drawable/ic_baseline_dialpad_24"
             android:tint="?colorOnPrimary"
             app:backgroundTint="?colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fragment_blocked_contacts_empty_placeholder"
+            animateVisibility="@{blockedContactsViewModel.isDataEmpty}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.7"
+            app:srcCompat="@drawable/ic_no_blocked_contacts" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fragment_blocked_contacts_recycler_view"

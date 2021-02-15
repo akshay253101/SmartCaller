@@ -32,6 +32,7 @@ class BlockedFragment :
     private var addNewContactDialog: AlertDialog? = null
 
     override fun onViewCreated(binding: FragmentBlockedBinding, savedInstanceState: Bundle?) {
+        binding.blockedContactsViewModel = viewModel
         initRecyclerView()
         addObserver()
         setViewListeners()
