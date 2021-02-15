@@ -1,6 +1,7 @@
 package com.beetlestance.smartcaller.utils
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import kotlinx.coroutines.withContext
 
@@ -36,4 +37,7 @@ class ContactsDataSource<T : Any>(
         }
     }
 
+    override fun getRefreshKey(state: PagingState<Int, T>): Int? {
+        return state.anchorPosition
+    }
 }

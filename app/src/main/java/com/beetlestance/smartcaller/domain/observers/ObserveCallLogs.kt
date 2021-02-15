@@ -31,7 +31,7 @@ class ObserveCallLogs @Inject constructor(
                 factory?.invalidate()
             }
 
-            pagingData.mapSync { contact ->
+            pagingData.map { contact ->
                 val blockedContact = blockedContacts.find { blockedContact ->
                     blockedContact.number == contact.number.validNumberOrNull()
                 }

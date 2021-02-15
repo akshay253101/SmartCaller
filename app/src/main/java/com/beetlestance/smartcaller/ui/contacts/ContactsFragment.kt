@@ -14,8 +14,8 @@ import com.beetlestance.smartcaller.ui.contacts.adapter.ContactsAdapter
 import com.beetlestance.smartcaller.utils.extensions.hasPermissions
 import com.beetlestance.smartcaller.utils.extensions.showPermissionDeniedDialog
 import com.beetlestance.smartcaller.utils.showSoftInput
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ContactsFragment :
@@ -44,9 +44,11 @@ class ContactsFragment :
     }
 
     private fun addObserver() {
-        viewLifecycleOwner.lifecycleScope.launch(dispatchers.io) {
-            viewModel.contactsPagedData.collect {
-                contactsAdapter?.submitData(it)
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.contactsPagedData.collectLatest {
+                withContext(dispatchers.io) {
+                    contactsAdapter?.submitData(it)
+                }
             }
         }
     }
