@@ -1,16 +1,20 @@
 package com.beetlestance.smartcaller.utils
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.LayoutRes
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.beetlestance.smartcaller.R
 
 fun isAtLeastVersion(version: Int): Boolean {
     return Build.VERSION.SDK_INT >= version
@@ -42,5 +46,24 @@ fun Activity.showSoftInput(view: View) {
     val currentFocus = currentFocus
     if (currentFocus != null && imm != null) {
         imm.showSoftInput(view, 0)
+    }
+}
+
+const val TESTING_CHANNEL_NAME: String = "Testing Purpose"
+const val TESTING_CHANNEL_ID: String = "testing"
+const val TESTING_CHANNEL_DESC: String = "For testing purpose only"
+
+fun Context.testNotification(number: String) {
+    // Build the notification and add the action.
+
+    val newMessageNotification = NotificationCompat.Builder(this, TESTING_CHANNEL_NAME)
+        .setSmallIcon(R.drawable.ic_launcher_background)
+        .setContentTitle("A call has been blocked")
+        .setContentText(number)
+        .build()
+
+    // Issue the notification.
+    with(NotificationManagerCompat.from(this)) {
+        notify(TESTING_CHANNEL_ID.hashCode(), newMessageNotification)
     }
 }

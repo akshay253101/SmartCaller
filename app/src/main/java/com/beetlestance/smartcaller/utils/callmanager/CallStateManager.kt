@@ -3,9 +3,16 @@ package com.beetlestance.smartcaller.utils.callmanager
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.TELEPHONY_SERVICE
+import android.os.Build
+import android.telecom.TelecomManager
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
+import android.util.Log
+import com.android.internal.telephony.ITelephony
+import com.beetlestance.smartcaller.data.datasource.store.BlockedContactsStore
 import com.beetlestance.smartcaller.di.ApplicationContext
+import com.beetlestance.smartcaller.utils.isAtLeastVersion
+import com.beetlestance.smartcaller.utils.testNotification
 import com.beetlestance.smartcaller.utils.validNumberOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,14 +22,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CallStateListener @Inject constructor(
-    @ApplicationContext private val applicationContext: Context
+class CallStateManager @Inject constructor(
+    @ApplicationContext private val applicationContext: Context,
+    private val store: BlockedContactsStore
 ) : PhoneStateListener() {
 
     private val _callState: MutableStateFlow<CallState?> = MutableStateFlow(CallState.IDLE)
     val callState: Flow<CallState> = _callState.filterNotNull().distinctUntilChanged()
 
-    private var inComingCallReceived: OnInComingCallReceived? = null
+    private val telephonyManager =
+        applicationContext.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+
 
     init {
         registerCallback()
@@ -35,17 +45,13 @@ class CallStateListener @Inject constructor(
         telephony.listen(this, LISTEN_CALL_STATE)
     }
 
-    fun attachListener(listener: OnInComingCallReceived? = null) {
-        inComingCallReceived = listener
-    }
-
     override fun onCallStateChanged(state: Int, phoneNumber: String?) {
         val number = phoneNumber?.validNumberOrNull()
         validateAndResetState()
 
         val newState = telephonyStateToCallState(state)
         if (number != null && newState == CallState.INCOMING_CALL_RECEIVED) {
-            inComingCallReceived?.onCallReceived(number)
+            checkAndBlockCaller(number)
         }
         _callState.value = newState
     }
@@ -80,9 +86,25 @@ class CallStateListener @Inject constructor(
         return currentState >= state
     }
 
-    interface OnInComingCallReceived {
+    private fun checkAndBlockCaller(number: String) {
+        if (store.isNumberBlocked(number)) rejectCall(number)
+    }
 
-        fun onCallReceived(number: String)
+    @SuppressLint("MissingPermission")
+    private fun rejectCall(number: String) {
+        if (isAtLeastVersion(Build.VERSION_CODES.P)) telephonyManager.endCall()
+        else {
+            try {
+                val method = telephonyManager.javaClass.getDeclaredMethod("getITelephony")
+                method.isAccessible = true
+
+                val telephony = method.invoke(telephonyManager) as ITelephony
+                telephony.endCall()
+            } catch (e: Exception) {
+                Log.e(javaClass.simpleName, "Couldn't end call with TelephonyManager", e)
+            }
+        }
+        applicationContext.testNotification(number = number)
     }
 
     enum class CallState() {

@@ -13,7 +13,7 @@ import com.beetlestance.smartcaller.constants.SmartCallerRequiredPermissions
 import com.beetlestance.smartcaller.databinding.ActivityMainBinding
 import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import com.beetlestance.smartcaller.di.viewmodelfactory.ViewModelFactory
-import com.beetlestance.smartcaller.utils.callmanager.CallStateListener
+import com.beetlestance.smartcaller.utils.callmanager.CallStateManager
 import com.beetlestance.smartcaller.utils.extensions.requestRequiredPermissions
 import com.beetlestance.smartcaller.utils.extensions.showPermissionDeniedDialog
 import dagger.android.support.DaggerAppCompatActivity
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivity(R.layout.activity_main) {
 
     @Inject
-    lateinit var callStateListener: CallStateListener
+    lateinit var callStateManager: CallStateManager
 
     @Inject
     lateinit var dispatchers: AppCoroutineDispatchers
@@ -43,7 +43,7 @@ class MainActivity : DaggerAppCompatActivity(R.layout.activity_main) {
 
     private fun addObserver() {
         lifecycleScope.launch(dispatchers.main) {
-            callStateListener.callState.collect { state ->
+            callStateManager.callState.collect { state ->
                 Toast.makeText(this@MainActivity, state.name, Toast.LENGTH_LONG).show()
             }
         }
