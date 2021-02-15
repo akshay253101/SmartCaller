@@ -11,14 +11,11 @@ import kotlinx.coroutines.flow.Flow
 abstract class BlockedContactsDao : EntityDao<BlockedContact>() {
 
     @Transaction
-    @Query(value = ALL_CONTACTS)
-    abstract fun contactsObservable(): Flow<List<BlockedContact>>
+    @Query(value = "SELECT * FROM ${AppTables.BLOCKED_CONTACTS_TABLE} WHERE number LIKE :query OR name LIKE :query")
+    abstract fun contactsObservable(query: String): Flow<List<BlockedContact>>
 
     @Transaction
     @Query(value = "SELECT * FROM ${AppTables.BLOCKED_CONTACTS_TABLE} WHERE number LIKE :number")
     abstract fun findContacts(number: String): List<BlockedContact>
 
-    companion object {
-        private const val ALL_CONTACTS = "SELECT * FROM ${AppTables.BLOCKED_CONTACTS_TABLE}"
-    }
 }

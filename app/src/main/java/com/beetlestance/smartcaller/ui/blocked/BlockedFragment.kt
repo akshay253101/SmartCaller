@@ -2,6 +2,7 @@ package com.beetlestance.smartcaller.ui.blocked
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -50,10 +51,23 @@ class BlockedFragment :
     }
 
     private fun setViewListeners() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (requireBinding().rootFragmentBlockedContacts.progress != 0f) {
+                requireBinding().rootFragmentBlockedContacts.transitionToStart()
+            } else {
+                isEnabled = false
+                requireActivity().onBackPressed()
+            }
+        }
+
         requireBinding().fragmentBlockedContactsOpenSearchView.setOnClickListener {
             requireBinding().fragmentBlockedContactsEditLayout.requestFocus()
             requireActivity().showSoftInput(requireBinding().fragmentBlockedContactsEditText)
             requireBinding().rootFragmentBlockedContacts.transitionToEnd()
+        }
+
+        requireBinding().fragmentBlockedContactsEditLayout.editText?.doOnTextChanged { text, _, _, _ ->
+            if (text.isNullOrBlank().not()) viewModel.executeQuery(text.toString())
         }
 
         requireBinding().fragmentBlockedContactsAddNewNumber.setOnClickListener {

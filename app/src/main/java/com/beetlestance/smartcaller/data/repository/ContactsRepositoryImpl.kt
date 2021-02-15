@@ -31,8 +31,8 @@ class ContactsRepositoryImpl @Inject constructor(
         return ContactsDataSource(dispatchers, ::mapQueryToCallLogs)
     }
 
-    override fun observeBlockedContacts(): Flow<List<BlockedContact>> {
-        return blockedContactsStore.observeContacts()
+    override fun observeBlockedContacts(query: String): Flow<List<BlockedContact>> {
+        return blockedContactsStore.observeContacts(query)
     }
 
     override suspend fun addToBlockedList(blockedContact: BlockedContact) {

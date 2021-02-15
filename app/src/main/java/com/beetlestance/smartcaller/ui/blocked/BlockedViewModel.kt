@@ -22,7 +22,7 @@ class BlockedViewModel @Inject constructor(
         get() = observeBlockedContacts.observe()
 
     init {
-        observeBlockedContacts(Unit)
+        observeBlockedContacts(ObserveBlockedContacts.FETCH_ALL)
     }
 
     fun updateBlockStatus(blockedContact: BlockedContact) {
@@ -40,5 +40,9 @@ class BlockedViewModel @Inject constructor(
             )
             addToBlockList.executeSync(blockedContact)
         }
+    }
+
+    fun executeQuery(query: String) {
+        observeBlockedContacts(query)
     }
 }

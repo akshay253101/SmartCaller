@@ -12,7 +12,7 @@ interface ContactsRepository {
 
     fun callLogsPageSource(): PagingSource<Int, CallLog>
 
-    fun observeBlockedContacts(): Flow<List<BlockedContact>>
+    fun observeBlockedContacts(query: String): Flow<List<BlockedContact>>
 
     suspend fun addToBlockedList(blockedContact: BlockedContact)
 

@@ -52,7 +52,7 @@ class CallLogsViewModel @Inject constructor(
             }
 
     init {
-        observeBlockedContacts(Unit)
+        observeBlockedContacts(ObserveBlockedContacts.FETCH_ALL)
         observeCallLogs(params = ObserveCallLogs.Params(pagingConfig = pagingConfig))
     }
 

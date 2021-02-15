@@ -8,9 +8,13 @@ import javax.inject.Inject
 
 class ObserveBlockedContacts @Inject constructor(
     private val contactsRepository: ContactsRepository
-) : ObserveUseCase<Unit, List<BlockedContact>>() {
+) : ObserveUseCase<String, List<BlockedContact>>() {
 
-    override fun createObservable(params: Unit): Flow<List<BlockedContact>> {
-        return contactsRepository.observeBlockedContacts()
+    override fun createObservable(params: String): Flow<List<BlockedContact>> {
+        return contactsRepository.observeBlockedContacts(query = "%$params%")
+    }
+
+    companion object {
+        const val FETCH_ALL = ""
     }
 }

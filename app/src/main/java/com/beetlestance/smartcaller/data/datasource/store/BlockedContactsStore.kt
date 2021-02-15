@@ -28,6 +28,6 @@ class BlockedContactsStore @Inject constructor(
         blockedContactsDao.deleteEntity(blockedContacts)
     }
 
-    fun observeContacts() = blockedContactsDao.contactsObservable()
+    fun observeContacts(query: String) = blockedContactsDao.contactsObservable(query)
 
 }

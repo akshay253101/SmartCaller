@@ -52,7 +52,7 @@ class ContactsViewModel @Inject constructor(
             }
 
     init {
-        observeBlockedContacts(Unit)
+        observeBlockedContacts(ObserveBlockedContacts.FETCH_ALL)
         observeContacts()
     }
 
