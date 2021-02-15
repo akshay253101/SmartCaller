@@ -23,16 +23,17 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_view_call_logs_icon"
+            callType="@{callLog.callType}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/shape_circle"
             android:backgroundTint="@{callLog.blocked ? @color/blocked_contacts_chip_color : @color/unblocked_contacts_chip_color }"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.12"
-            app:srcCompat="@drawable/ic_call_blocked" />
+            app:layout_constraintWidth_percent="0.12" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/item_view_call_logs_name"
