@@ -74,7 +74,7 @@
             android:checkable="true"
             android:checked="@{callLog.blocked}"
             android:onClick="@{()->callLogsViewModel.updateBlockStatus(callLog)}"
-            android:text="@{callLog.blocked ? @string/general_block : @string/general_unblock}"
+            android:text="@{callLog.blocked ? @string/general_unblock : @string/general_block}"
             android:textColor="?colorSurface"
             app:chipBackgroundColor="@color/selector_blocked_state"
             app:chipIcon="@drawable/ic_caller_block_state"

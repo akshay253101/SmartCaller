@@ -73,7 +73,7 @@
             android:checkable="true"
             android:checked="@{contact.blocked}"
             android:onClick="@{()->contactsViewModel.updateBlockStatus(contact)}"
-            android:text="@{contact.blocked ? @string/general_block : @string/general_unblock}"
+            android:text="@{contact.blocked ? @string/general_unblock : @string/general_block}"
             android:textColor="?colorSurface"
             app:chipBackgroundColor="@color/selector_blocked_state"
             app:chipIcon="@drawable/ic_caller_block_state"
