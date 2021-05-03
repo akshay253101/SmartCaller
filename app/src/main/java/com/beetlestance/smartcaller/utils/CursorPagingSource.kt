@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import kotlinx.coroutines.withContext
 
-class ContactsDataSource<T : Any>(
+class CursorPagingSource<T : Any>(
     private val dispatcher: AppCoroutineDispatchers,
     private val map: suspend (Int, Int?) -> List<T>
 ) : PagingSource<Int, T>() {

@@ -12,7 +12,7 @@ import com.beetlestance.smartcaller.data.states.CallLog
 import com.beetlestance.smartcaller.data.states.Contact
 import com.beetlestance.smartcaller.di.AppCoroutineDispatchers
 import com.beetlestance.smartcaller.di.ApplicationContext
-import com.beetlestance.smartcaller.utils.ContactsDataSource
+import com.beetlestance.smartcaller.utils.CursorPagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -24,13 +24,13 @@ class ContactsRepositoryImpl @Inject constructor(
 ) : ContactsRepository {
 
     override fun contactsPageSource(query: String): PagingSource<Int, Contact> {
-        return ContactsDataSource(dispatchers) { pageSize, key ->
+        return CursorPagingSource(dispatchers) { pageSize, key ->
             mapQueryToContacts(pageSize, key, query)
         }
     }
 
     override fun callLogsPageSource(query: String): PagingSource<Int, CallLog> {
-        return ContactsDataSource(dispatchers) { pageSize, key ->
+        return CursorPagingSource(dispatchers) { pageSize, key ->
             mapQueryToCallLogs(pageSize, key, query)
         }
     }
