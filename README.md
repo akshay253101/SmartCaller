@@ -1,2 +1,2 @@
 # SmartCaller
-An android for call blocking
+An android App for call blocking
